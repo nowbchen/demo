@@ -1,14 +1,17 @@
 import streamlit as st
 from database.db import engine, Base
-from pages.login import login_page
-from pages.dashboard import dashboard_page
+from views.login import login_page
+from views.dashboard import dashboard_page
 
 # 初始化数据库表
 Base.metadata.create_all(bind=engine)
 
 def main():
-    # 设置页面标题
-    st.set_page_config(page_title="用户评分系统")
+    # 设置页面标题和隐藏汉堡菜单
+    st.set_page_config(
+        page_title="用户评分系统",
+        menu_items=None  # 隐藏汉堡菜单
+    )
     
     # 检查登录状态
     if 'logged_in' not in st.session_state:

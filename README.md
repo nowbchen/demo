@@ -11,7 +11,7 @@ project_root/
 │ └── config.py # 配置文件（数据库配置、应用配置等）
 ├── database/
 │ └── db.py # 数据库操作和模型定义
-├── models/
+├── app/
 │ ├── user.py # 用户模型
 │ └── rating.py # 评分模型
 ├── pages/
