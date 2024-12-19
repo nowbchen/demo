@@ -1,10 +1,10 @@
 import streamlit as st
-from database.db import engine, Base
+from database.db import init_db
 from views.login import login_page
 from views.dashboard import dashboard_page
 
-# 初始化数据库表
-Base.metadata.create_all(bind=engine)
+# 初始化数据库和创建测试用户
+init_db()
 
 def main():
     # 设置页面标题和隐藏汉堡菜单
