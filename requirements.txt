@@ -1,3 +1,5 @@
 streamlit
 sqlalchemy
 bcrypt
+plotly
+pandas
