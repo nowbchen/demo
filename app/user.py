@@ -16,7 +16,16 @@ class User(Base):
     
     @staticmethod
     def hash_password(password):
+        """将密码转换为哈希值"""
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     
     def verify_password(self, password):
-        return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
+        """验证密码"""
+        try:
+            return bcrypt.checkpw(
+                password.encode('utf-8'),
+                self.password_hash.encode('utf-8')
+            )
+        except Exception as e:
+            print(f"密码验证出错: {e}")  # 添加错误日志
+            return False

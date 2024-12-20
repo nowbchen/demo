@@ -12,7 +12,6 @@ SessionLocal = sessionmaker(bind=engine)
 
 def init_db():
     """初始化数据库并创建测试用户"""
-    # 在这里导入 User 模型，避免循环导入
     from app.user import User
     
     # 创建所有表
@@ -27,12 +26,9 @@ def init_db():
         
         if not test_user:
             # 创建测试用户
-            password = 'test123456'
-            hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            
             test_user = User(
                 username='test',
-                password_hash=hashed.decode('utf-8'),
+                password_hash=User.hash_password('test123456').decode('utf-8'),
                 level=1,
                 parent_id=None
             )
@@ -56,7 +52,7 @@ def get_db():
 
 def authenticate_user(db, username: str, password: str):
     """验证用户登录信息"""
-    from app.user import User  # 在函数内部导入
+    from app.user import User
     try:
         user = db.query(User).filter(User.username == username).first()
         if user and user.verify_password(password):
