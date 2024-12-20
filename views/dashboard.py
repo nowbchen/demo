@@ -23,7 +23,7 @@ def dashboard_page():
             st.session_state['logged_in'] = False
             st.session_state['user_id'] = None
             st.session_state['username'] = None
-            st.experimental_rerun()
+            st.rerun()
     
     # 主页面标题
     st.title(f"欢迎回来, {st.session_state['username']}!")
