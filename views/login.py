@@ -1,6 +1,7 @@
 import streamlit as st
 from database.db import SessionLocal
 from utils.auth import authenticate_user
+import time
 
 def login_page():
     st.title("用户登录")
@@ -25,8 +26,10 @@ def login_page():
                 st.session_state['logged_in'] = True
                 st.session_state['user_id'] = user.id
                 st.session_state['username'] = user.username
-                st.success("登录成功！")
-                st.experimental_rerun()  # 重新运行应用以更新页面
+                
+                with st.spinner('登录成功，正在跳转...'):
+                    time.sleep(1)  # 添加一个短暂的延迟
+                st.rerun()
             else:
                 st.error("用户名或密码错误！")
             
