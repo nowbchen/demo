@@ -1,23 +1,19 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import bcrypt
-from datetime import datetime
-from app.user import User  # 导入User模型
+from database.base import Base
+from app.user import User  # 这个导入移到函数内部
 
 # 创建SQLite数据库引擎
 engine = create_engine('sqlite:///database/users.db', echo=True)
 
 # 创建数据库会话类
-# sessionmaker用于创建会话工厂,绑定到我们的数据库引擎
 SessionLocal = sessionmaker(bind=engine)
-
-# 创建声明性基类
-# Base类将用作所有模型类的基类,用于声明数据库模型
-Base = declarative_base()
 
 def init_db():
     """初始化数据库并创建测试用户"""
+    # 在这里导入 User 模型，避免循环导入
+    from app.user import User
     
     # 创建所有表
     Base.metadata.create_all(bind=engine)
@@ -37,8 +33,8 @@ def init_db():
             test_user = User(
                 username='test',
                 password_hash=hashed.decode('utf-8'),
-                level=1,  # 设置用户层级
-                parent_id=0  # 测试账号的上级用户为0
+                level=1,
+                parent_id=None
             )
             
             db.add(test_user)
@@ -51,7 +47,6 @@ def init_db():
     finally:
         db.close()
 
-# 创建数据库会话的生成器函数
 def get_db():
     db = SessionLocal()
     try:
@@ -59,14 +54,14 @@ def get_db():
     finally:
         db.close()
 
-# 用户认证函数
-def authenticate_user(username: str, password: str):
+def authenticate_user(db, username: str, password: str):
     """验证用户登录信息"""
-    db = SessionLocal()
+    from app.user import User  # 在函数内部导入
     try:
         user = db.query(User).filter(User.username == username).first()
         if user and user.verify_password(password):
             return user
         return None
-    finally:
-        db.close()
+    except Exception as e:
+        print(f"认证用户时出错: {e}")
+        return None
