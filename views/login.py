@@ -19,21 +19,22 @@ def login_page():
             
             # 验证用户
             db = SessionLocal()
-            user = authenticate_user(db, username, password)
-            
-            if user:
-                # 登录成功，设置会话状态
-                st.session_state['logged_in'] = True
-                st.session_state['user_id'] = user.id
-                st.session_state['username'] = user.username
+            try:
+                user = authenticate_user(db, username, password)
                 
-                with st.spinner('登录成功，正在跳转...'):
-                    time.sleep(1)  # 添加一个短暂的延迟
-                st.rerun()
-            else:
-                st.error("用户名或密码错误！")
-            
-            db.close()
+                if user:
+                    # 登录成功，设置会话状态
+                    st.session_state['logged_in'] = True
+                    st.session_state['user_id'] = user.id
+                    st.session_state['username'] = user.username
+                    
+                    with st.spinner('登录成功，正在跳转...'):
+                        time.sleep(1)
+                    st.rerun()
+                else:
+                    st.error("用户名或密码错误！")
+            finally:
+                db.close()
 
     # 添加注册链接
     st.markdown("还没有账号？[点击注册](/register)")
