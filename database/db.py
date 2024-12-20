@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import bcrypt
 from datetime import datetime
+from app.user import User  # 导入User模型
 
 # 创建SQLite数据库引擎
 engine = create_engine('sqlite:///database/users.db', echo=True)
@@ -17,7 +18,6 @@ Base = declarative_base()
 
 def init_db():
     """初始化数据库并创建测试用户"""
-    from app.user import User  # 导入User模型
     
     # 创建所有表
     Base.metadata.create_all(bind=engine)
@@ -36,7 +36,9 @@ def init_db():
             
             test_user = User(
                 username='test',
-                password_hash=hashed
+                password_hash=hashed.decode('utf-8'),
+                level=1,  # 设置用户层级
+                parent_id=0  # 测试账号的上级用户为0
             )
             
             db.add(test_user)
@@ -54,5 +56,17 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
+    finally:
+        db.close()
+
+# 用户认证函数
+def authenticate_user(username: str, password: str):
+    """验证用户登录信息"""
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.username == username).first()
+        if user and user.verify_password(password):
+            return user
+        return None
     finally:
         db.close()

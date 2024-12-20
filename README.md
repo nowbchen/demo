@@ -103,7 +103,7 @@ cd project_root
 touch main.py
 touch config/config.py
 touch database/db.py
-touch models/{user.py,rating.py}
+touch app/{user.py,rating.py}
 touch pages/{login.py,register.py,dashboard.py,rating.py}
 touch utils/{auth.py,session.py}
 touch requirements.txt
