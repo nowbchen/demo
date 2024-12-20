@@ -3,14 +3,14 @@ from database.db import init_db
 from views.login import login_page
 from views.dashboard import dashboard_page
 
-# 初始化数据库和创建测试用户
-init_db()
-
 def main():
+    # 初始化数据库和创建测试用户
+    init_db()
+    
     # 设置页面标题和隐藏汉堡菜单
     st.set_page_config(
         page_title="用户评分系统",
-        menu_items=None  # 隐藏汉堡菜单
+        menu_items=None
     )
     
     # 检查登录状态

@@ -7,8 +7,8 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    password_hash = Column(String)
+    username = Column(String(50), unique=True, index=True)
+    password_hash = Column(String(100))
     level = Column(Integer, default=1)
     parent_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     
@@ -27,5 +27,8 @@ class User(Base):
                 self.password_hash.encode('utf-8')
             )
         except Exception as e:
-            print(f"密码验证出错: {e}")  # 添加错误日志
+            print(f"密码验证出错: {e}")
             return False
+    
+    def __repr__(self):
+        return f"<User {self.username}>"
